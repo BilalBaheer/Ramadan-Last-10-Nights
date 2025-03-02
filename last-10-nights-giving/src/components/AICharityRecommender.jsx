@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Form, Button, Container, Card, Spinner } from 'react-bootstrap';
+import { Form, Button, Container, Card, Spinner, Row, Col } from 'react-bootstrap';
+import { BsGlobe, BsHeart } from 'react-icons/bs';
 
 const AICharityRecommender = () => {
   const [userPreferences, setUserPreferences] = useState('');
@@ -15,17 +16,23 @@ const AICharityRecommender = () => {
         {
           name: "Islamic Relief USA",
           match: "95%",
-          reason: "Strong focus on your preferred causes: education and orphan support"
+          reason: "Strong focus on your preferred causes: education and orphan support",
+          website: "https://irusa.org",
+          donationUrl: "https://irusa.org/donate/"
         },
         {
           name: "Helping Hand USA",
           match: "90%",
-          reason: "Excellent track record in food relief and emergency aid"
+          reason: "Excellent track record in food relief and emergency aid",
+          website: "https://hhrd.org",
+          donationUrl: "https://hhrd.org/donate"
         },
         {
           name: "Zakat Foundation",
           match: "85%",
-          reason: "Matches your interest in sustainable development projects"
+          reason: "Matches your interest in sustainable development projects",
+          website: "https://www.zakat.org",
+          donationUrl: "https://www.zakat.org/donate"
         }
       ];
       
@@ -83,13 +90,39 @@ const AICharityRecommender = () => {
             <div className="mt-4">
               <h5>Recommended Charities</h5>
               {recommendations.map((rec, index) => (
-                <Card key={index} className="mb-2 recommendation-card">
+                <Card key={index} className="mb-3 recommendation-card">
                   <Card.Body>
-                    <div className="d-flex justify-content-between align-items-start">
+                    <div className="d-flex justify-content-between align-items-start mb-2">
                       <h6>{rec.name}</h6>
                       <span className="match-badge">{rec.match}</span>
                     </div>
-                    <p className="mb-0 text-muted">{rec.reason}</p>
+                    <p className="mb-3 text-muted">{rec.reason}</p>
+                    <Row>
+                      <Col>
+                        <Button 
+                          variant="outline-primary" 
+                          size="sm" 
+                          className="w-100"
+                          href={rec.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <BsGlobe className="me-1" /> Visit Website
+                        </Button>
+                      </Col>
+                      <Col>
+                        <Button 
+                          variant="success" 
+                          size="sm" 
+                          className="w-100"
+                          href={rec.donationUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <BsHeart className="me-1" /> Donate
+                        </Button>
+                      </Col>
+                    </Row>
                   </Card.Body>
                 </Card>
               ))}
