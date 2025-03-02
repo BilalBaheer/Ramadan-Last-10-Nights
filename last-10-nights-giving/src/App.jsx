@@ -1,61 +1,81 @@
-import React, { useState } from 'react';
-import { Container, Tab, Nav } from 'react-bootstrap';
+import React from 'react';
+import { Container, Tab, Nav, Row, Col } from 'react-bootstrap';
 import CharityList from './components/CharityList';
 import DonationScheduler from './components/DonationScheduler';
 import DonationTracker from './components/DonationTracker';
-import AICharityRecommender from './components/AICharityRecommender';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import AboutSection from './components/AboutSection';
+import DonationHistory from './components/DonationHistory';
+import CharitiesTab from './components/CharitiesTab';
+import ResourcesTab from './components/ResourcesTab';
+import { DonationProvider } from './context/DonationContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 function App() {
-  const [activeTab, setActiveTab] = useState('charities');
-
   return (
-    <div className="app-wrapper">
-      <Header />
-      
-      <main className="main-content">
-        <Container fluid className="py-4">
-          <Tab.Container id="main-tabs" activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
-            <Nav variant="pills" className="main-tabs mb-4 justify-content-center">
-              <Nav.Item>
-                <Nav.Link eventKey="charities" href="#charities">Charity Directory</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link eventKey="ai" href="#ai">AI Recommendations</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link eventKey="schedule" href="#schedule">Schedule Donations</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link eventKey="tracker" href="#tracker">Donation Tracker</Nav.Link>
-              </Nav.Item>
-            </Nav>
+    <DonationProvider>
+      <div className="app-wrapper">
+        <Header />
+        
+        <Container className="my-5">
+          <Tab.Container id="main-tabs" defaultActiveKey="home">
+            <Row className="mb-4">
+              <Col>
+                <Nav variant="pills" className="flex-row justify-content-center">
+                  <Nav.Item>
+                    <Nav.Link eventKey="home">Home</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="schedule">Schedule Donations</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="charities">Explore Charities</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="tracker">Donation Tracker</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="about">About</Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </Col>
+            </Row>
             
             <Tab.Content>
-              <Tab.Pane eventKey="charities">
+              <Tab.Pane eventKey="home">
                 <CharityList />
-              </Tab.Pane>
-              <Tab.Pane eventKey="ai">
-                <AICharityRecommender />
               </Tab.Pane>
               <Tab.Pane eventKey="schedule">
                 <DonationScheduler />
               </Tab.Pane>
+              <Tab.Pane eventKey="charities">
+                <CharitiesTab />
+              </Tab.Pane>
               <Tab.Pane eventKey="tracker">
-                <DonationTracker />
+                <Row>
+                  <Col lg={8}>
+                    <DonationTracker />
+                  </Col>
+                  <Col lg={4}>
+                    <DonationHistory />
+                  </Col>
+                </Row>
+              </Tab.Pane>
+              <Tab.Pane eventKey="about">
+                <AboutSection />
+              </Tab.Pane>
+              <Tab.Pane eventKey="resources">
+                <ResourcesTab />
               </Tab.Pane>
             </Tab.Content>
           </Tab.Container>
         </Container>
-      </main>
-      
-      <AboutSection />
-      <Footer />
-    </div>
+        
+        <Footer />
+      </div>
+    </DonationProvider>
   );
 }
 

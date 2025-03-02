@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Card, Button, Badge, Form, InputGroup, Nav, Tab } from 'react-bootstrap';
 import { BsHeart, BsStar, BsGlobe, BsSearch, BsFilter, BsExclamationTriangle } from 'react-icons/bs';
+import QuickDonationForm from './QuickDonationForm';
 
 const CharitiesTab = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [activeRegion, setActiveRegion] = useState('all');
+  const [showDonationModal, setShowDonationModal] = useState(false);
+  const [selectedCharity, setSelectedCharity] = useState(null);
   
   // Sample charity data
   const charities = [
@@ -275,6 +278,12 @@ const CharitiesTab = () => {
     const matchesRegion = activeRegion === 'all' || charity.regions.includes(activeRegion);
     return matchesSearch && matchesCategory && matchesRegion;
   });
+  
+  // Handle opening the donation modal
+  const handleDonateClick = (charity) => {
+    setSelectedCharity(charity);
+    setShowDonationModal(true);
+  };
 
   return (
     <Container>
@@ -384,9 +393,7 @@ const CharitiesTab = () => {
                         <Button 
                           variant="success" 
                           size="sm"
-                          href={charity.donationUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          onClick={() => handleDonateClick(charity)}
                         >
                           <BsHeart className="me-1" /> Donate
                         </Button>
@@ -406,6 +413,15 @@ const CharitiesTab = () => {
           </Tab.Pane>
         </Tab.Content>
       </Tab.Container>
+      
+      {/* Quick Donation Modal */}
+      {selectedCharity && (
+        <QuickDonationForm 
+          charity={selectedCharity}
+          show={showDonationModal}
+          handleClose={() => setShowDonationModal(false)}
+        />
+      )}
     </Container>
   );
 };

@@ -463,41 +463,62 @@ body {
 }
 
 /* Donation Tracker */
-.night-card {
-  background: white;
+.donation-counter {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.tracker-card {
   border-radius: var(--border-radius);
-  border: none;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.tracker-card .card-header {
+  background-color: var(--primary-color);
+  color: white;
   padding: 1rem;
-  text-align: center;
-  transition: all 0.3s ease;
+}
+
+.night-card {
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease-in-out;
 }
 
 .night-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-5px);
 }
 
-.night-amount {
-  font-size: 1.5rem;
+.urgent-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #dc3545;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  z-index: 1;
+}
+
+/* Donation History */
+.donation-history-item {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s ease;
+}
+
+.donation-history-item:hover {
+  background-color: #f9f9f9;
+}
+
+.donation-amount {
   font-weight: 700;
   color: var(--primary-color);
-}
-
-/* AI Recommendations */
-.recommendation-card {
-  background: white;
-  border-radius: var(--border-radius);
-  padding: 1.5rem;
-  box-shadow: var(--shadow-sm);
-  border-left: 4px solid var(--accent-color);
-  margin: 1rem 0;
-  transition: all 0.3s ease;
-  width: 100%;
-}
-
-.recommendation-card:hover {
-  box-shadow: var(--shadow-md);
 }
 
 /* Bootstrap Overrides */

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Card, Row, Col, Alert } from 'react-bootstrap';
+import { useDonations } from '../context/DonationContext';
 
 const DonationScheduler = () => {
+  const { addDonation } = useDonations();
   const [donationPreferences, setDonationPreferences] = useState({
     amount: '',
     selectedCharity: '',
@@ -61,6 +63,24 @@ const DonationScheduler = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Find the selected charity's full details
+    const selectedCharityDetails = charityOptions.find(
+      charity => charity.value === donationPreferences.selectedCharity
+    );
+    
+    // Add the donation to our context
+    addDonation({
+      amount: parseFloat(donationPreferences.amount) * 10, // Total for 10 nights
+      charityId: donationPreferences.selectedCharity,
+      charityName: selectedCharityDetails?.label || 'Unknown Charity',
+      email: donationPreferences.email,
+      isScheduled: true,
+      scheduledTime: donationPreferences.notificationTime,
+      region: selectedCharityDetails?.region || 'Unknown Region'
+    });
+    
+    // Show success message
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
   };

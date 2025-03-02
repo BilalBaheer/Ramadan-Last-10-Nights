@@ -1,31 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Card, Row, Col, ProgressBar } from 'react-bootstrap';
+import React from 'react';
+import { Container, Card, Row, Col, ProgressBar, Button } from 'react-bootstrap';
+import { useDonations } from '../context/DonationContext';
 
 const DonationTracker = () => {
-  const [totalDonations, setTotalDonations] = useState(0);
-  const [nightlyBreakdown, setNightlyBreakdown] = useState([
-    { night: 21, amount: 5000, target: 10000 },
-    { night: 22, amount: 7500, target: 10000 },
-    { night: 23, amount: 6800, target: 10000 },
-    { night: 24, amount: 8200, target: 10000 },
-    { night: 25, amount: 9500, target: 10000 },
-    { night: 26, amount: 4200, target: 10000 },
-    { night: 27, amount: 12000, target: 10000 },
-    { night: 28, amount: 6500, target: 10000 },
-    { night: 29, amount: 7800, target: 10000 },
-    { night: 30, amount: 8900, target: 10000 },
-  ]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTotalDonations(prev => {
-        const increment = Math.floor(Math.random() * 100);
-        return prev + increment;
-      });
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const { totalDonations, nightlyBreakdown, resetDonations } = useDonations();
 
   const calculateProgress = (amount, target) => {
     return Math.min((amount / target) * 100, 100);
@@ -81,6 +59,18 @@ const DonationTracker = () => {
               </Col>
             ))}
           </Row>
+          
+          {/* Admin button - in a real app, this would be protected */}
+          <div className="text-center mt-4">
+            <Button 
+              variant="outline-danger" 
+              size="sm" 
+              onClick={resetDonations}
+              className="mt-3"
+            >
+              Reset Donation Data (Admin Only)
+            </Button>
+          </div>
         </Card.Body>
       </Card>
     </Container>
