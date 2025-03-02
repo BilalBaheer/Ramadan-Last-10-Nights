@@ -57,13 +57,8 @@ const Header = () => {
               <Nav.Link href="#home" className="nav-item">Home</Nav.Link>
               <Nav.Link href="#charities" className="nav-item">Charities</Nav.Link>
               <Nav.Link href="#about" className="nav-item">About Laylatul Qadr</Nav.Link>
-              <Nav.Link href="#faq" className="nav-item">FAQ</Nav.Link>
             </Nav>
             <Nav>
-              <Button variant="outline-light" className="me-2 auth-button">
-                <BsPersonCircle size={18} className="me-2" />
-                Sign In
-              </Button>
               <Button variant="success" className="donate-now-btn">
                 <BsHeart size={18} className="me-2" />
                 Donate Now
@@ -72,6 +67,12 @@ const Header = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      
+      <div className="mission-banner bg-primary text-white py-2 text-center">
+        <Container>
+          <p className="mb-0"><strong>Our Goal:</strong> Help you catch Laylatul Qadr by giving charity every night during the last 10 nights of Ramadan</p>
+        </Container>
+      </div>
       
       <div className="hero-section text-center">
         <Container fluid className="hero-container">
