@@ -1,0 +1,576 @@
+:root {
+  --primary-color: #2E7D32;
+  --secondary-color: #388E3C;
+  --accent-color: #4CAF50;
+  --background-light: #f8f9fa;
+  --text-dark: #343a40;
+  --text-light: #f8f9fa;
+  --border-radius: 8px;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+body {
+  background-color: var(--background-light);
+  color: var(--text-dark);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.app-wrapper {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Header & Hero Section */
+.header-wrapper {
+  width: 100%;
+}
+
+.navbar {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+  padding: 1rem 0;
+  box-shadow: var(--shadow-md);
+  width: 100%;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-brand svg {
+  margin-right: 0.5rem;
+}
+
+.navbar-nav .nav-link {
+  color: var(--text-light) !important;
+  font-weight: 500;
+  margin: 0 0.5rem;
+  transition: opacity 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+  opacity: 0.8;
+}
+
+.auth-button {
+  display: flex;
+  align-items: center;
+  border-radius: var(--border-radius);
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.donate-now-btn {
+  display: flex;
+  align-items: center;
+  background-color: var(--accent-color) !important;
+  border-color: var(--accent-color) !important;
+  border-radius: var(--border-radius);
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.hero-section {
+  background-color: #0A2E0A;
+  color: white;
+  padding: 5rem 0;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.hero-container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.hero-section h1 {
+  font-weight: 700;
+  margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-section p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-section::before {
+  content: "Ramadan";
+  position: absolute;
+  font-size: 15rem;
+  font-weight: 900;
+  opacity: 0.1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+.countdown-timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.countdown-item {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius);
+  padding: 1rem 1.5rem;
+  margin: 0 0.5rem;
+  min-width: 100px;
+}
+
+.countdown-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  display: block;
+}
+
+.countdown-label {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.countdown-caption {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Main Content */
+.main-content {
+  width: 100%;
+}
+
+/* Tabs Navigation */
+.main-tabs {
+  background-color: white;
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.main-tabs .nav-link {
+  color: var(--text-dark);
+  font-weight: 500;
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 0.75rem 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.main-tabs .nav-link:hover {
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+.main-tabs .nav-link.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* About Section */
+.about-section {
+  background-color: white;
+  padding: 5rem 0;
+  width: 100%;
+}
+
+.section-title {
+  color: var(--primary-color);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+  color: #6c757d;
+  margin-bottom: 3rem;
+}
+
+.about-content h3 {
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.about-content p {
+  margin-bottom: 1.5rem;
+  line-height: 1.7;
+}
+
+.about-image-container {
+  position: relative;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.about-image {
+  transition: transform 0.3s ease;
+  width: 100%;
+}
+
+.about-image:hover {
+  transform: scale(1.03);
+}
+
+.quran-verse {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(46, 125, 50, 0.9);
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.arabic-text {
+  font-family: 'Amiri', serif;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.verse-translation {
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.verse-reference {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.feature-card {
+  background-color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.feature-icon {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+/* Footer */
+.footer-section {
+  background-color: #1a1a1a;
+  color: white;
+  padding-top: 2rem;
+  width: 100%;
+}
+
+.footer-logo h5 {
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+.footer-about {
+  margin-top: 1rem;
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+.social-icons {
+  display: flex;
+  margin-top: 1.5rem;
+}
+
+.social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+  background-color: var(--accent-color);
+  transform: translateY(-3px);
+}
+
+.footer-heading {
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  position: relative;
+  padding-bottom: 0.75rem;
+}
+
+.footer-heading::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 2px;
+  background-color: var(--accent-color);
+}
+
+.footer-links, .footer-contact {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li, .footer-contact li {
+  margin-bottom: 0.75rem;
+}
+
+.footer-links a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--accent-color);
+}
+
+.footer-contact li {
+  display: flex;
+  align-items: flex-start;
+}
+
+.footer-contact li svg {
+  margin-top: 4px;
+  margin-right: 0.75rem;
+  color: var(--accent-color);
+}
+
+.footer-divider {
+  border-color: rgba(255, 255, 255, 0.1);
+  margin: 2rem 0 1rem;
+}
+
+.footer-bottom-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.footer-bottom-links li {
+  margin-left: 1.5rem;
+}
+
+.footer-bottom-links a {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.footer-bottom-links a:hover {
+  color: white;
+}
+
+/* Charity Cards */
+.charity-card {
+  border: none;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  height: 100%;
+  background: white;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+}
+
+.charity-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.charity-card-img {
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+  height: 200px;
+  object-fit: cover;
+}
+
+.category-badge {
+  display: inline-block;
+  background-color: rgba(76, 175, 80, 0.1);
+  color: var(--primary-color);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* Scheduler and AI Recommender */
+.form-card {
+  background: white;
+  border-radius: var(--border-radius);
+  border: none;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.card-header {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  padding: 1rem 1.5rem;
+  border-top-left-radius: var(--border-radius) !important;
+  border-top-right-radius: var(--border-radius) !important;
+}
+
+.total-donation {
+  background-color: rgba(76, 175, 80, 0.1);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+/* Donation Tracker */
+.night-card {
+  background: white;
+  border-radius: var(--border-radius);
+  border: none;
+  box-shadow: var(--shadow-sm);
+  padding: 1rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.night-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.night-amount {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+/* AI Recommendations */
+.recommendation-card {
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid var(--accent-color);
+  margin: 1rem 0;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.recommendation-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Bootstrap Overrides */
+.container-fluid {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.row {
+  width: 100%;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .hero-section::before {
+    font-size: 10rem;
+  }
+  
+  .countdown-item {
+    min-width: 80px;
+    padding: 0.75rem 1rem;
+  }
+  
+  .countdown-number {
+    font-size: 2rem;
+  }
+  
+  .footer-bottom-links {
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  .footer-bottom-links li {
+    margin: 0 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 3rem 0;
+  }
+  
+  .countdown-item {
+    min-width: 70px;
+    padding: 0.5rem 0.75rem;
+    margin: 0 0.25rem;
+  }
+  
+  .countdown-number {
+    font-size: 1.75rem;
+  }
+  
+  .about-image-container {
+    margin-top: 2rem;
+  }
+  
+  .footer-heading {
+    margin-top: 2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .countdown-item {
+    min-width: 60px;
+    padding: 0.5rem;
+  }
+  
+  .countdown-number {
+    font-size: 1.5rem;
+  }
+}
