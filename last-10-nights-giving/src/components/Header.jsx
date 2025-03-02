@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, Container, Nav, Button } from 'react-bootstrap';
-import { BsMoonStars, BsHeart, BsPersonCircle } from 'react-icons/bs';
+import { BsMoonStars, BsHeart } from 'react-icons/bs';
 
-const Header = () => {
+const Header = ({ onTabSelect }) => {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -38,34 +38,26 @@ const Header = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const handleScheduleDonations = () => {
-    // Find the schedule tab and click it
-    const scheduleTab = document.querySelector('a.nav-link[eventKey="schedule"]');
-    if (scheduleTab) {
-      scheduleTab.click();
-    }
-  };
-
   return (
     <header className="header-wrapper">
       <Navbar bg="dark" variant="dark" expand="lg" className="py-3">
         <Container fluid>
-          <Navbar.Brand href="#" onClick={() => document.querySelector('a.nav-link[eventKey="home"]').click()} className="d-flex align-items-center">
+          <Navbar.Brand href="#" onClick={() => onTabSelect('home')} className="d-flex align-items-center">
             <BsMoonStars size={24} className="me-2" />
             <span className="brand-text">Last 10 Nights Giving</span>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="#" onClick={() => document.querySelector('a.nav-link[eventKey="home"]').click()} className="nav-item">Home</Nav.Link>
-              <Nav.Link href="#" onClick={() => document.querySelector('a.nav-link[eventKey="charities"]').click()} className="nav-item">Charities</Nav.Link>
-              <Nav.Link href="#" onClick={() => document.querySelector('a.nav-link[eventKey="about"]').click()} className="nav-item">About Laylatul Qadr</Nav.Link>
+              <Nav.Link href="#" onClick={() => onTabSelect('home')} className="nav-item">Home</Nav.Link>
+              <Nav.Link href="#" onClick={() => onTabSelect('charities')} className="nav-item">Charities</Nav.Link>
+              <Nav.Link href="#" onClick={() => onTabSelect('about')} className="nav-item">About Laylatul Qadr</Nav.Link>
             </Nav>
             <Nav>
               <Button 
                 variant="success" 
                 className="donate-now-btn"
-                onClick={() => document.querySelector('a.nav-link[eventKey="charities"]').click()}
+                onClick={() => onTabSelect('charities')}
               >
                 <BsHeart size={18} className="me-2" />
                 Donate Now
@@ -117,7 +109,7 @@ const Header = () => {
             variant="primary" 
             size="lg" 
             className="px-4 py-2"
-            onClick={() => document.querySelector('a.nav-link[eventKey="schedule"]').click()}
+            onClick={() => onTabSelect('schedule')}
           >
             Schedule Your Donations
           </Button>

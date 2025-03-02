@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, Tab, Nav, Row, Col } from 'react-bootstrap';
 import CharityList from './components/CharityList';
 import DonationScheduler from './components/DonationScheduler';
@@ -14,13 +14,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 function App() {
+  const [activeTab, setActiveTab] = useState('home');
+  
   return (
     <DonationProvider>
       <div className="app-wrapper">
-        <Header />
+        <Header onTabSelect={setActiveTab} />
         
         <Container className="my-5">
-          <Tab.Container id="main-tabs" defaultActiveKey="home">
+          <Tab.Container id="main-tabs" activeKey={activeTab} onSelect={setActiveTab}>
             <Row className="mb-4">
               <Col>
                 <Nav variant="pills" className="flex-row justify-content-center">
