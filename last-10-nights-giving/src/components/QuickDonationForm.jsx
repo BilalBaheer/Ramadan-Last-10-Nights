@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button, InputGroup, Modal } from 'react-bootstrap';
+import { Form, Button, InputGroup, Modal, Spinner } from 'react-bootstrap';
 import { useDonations } from '../context/DonationContext';
 
 const QuickDonationForm = ({ charity, show, handleClose }) => {
@@ -7,31 +7,42 @@ const QuickDonationForm = ({ charity, show, handleClose }) => {
   const [amount, setAmount] = useState('');
   const [email, setEmail] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsProcessing(true);
+    setErrorMessage('');
     
-    // Add the donation to our context
-    addDonation({
-      amount: parseFloat(amount),
-      charityId: charity.id,
-      charityName: charity.name,
-      email: email,
-      isScheduled: false,
-      region: charity.regions[0] || 'Unknown Region'
-    });
-    
-    // Show success message
-    setShowSuccess(true);
-    
-    // Reset form
-    setAmount('');
-    
-    // Close modal after a delay
-    setTimeout(() => {
-      setShowSuccess(false);
-      handleClose();
-    }, 2000);
+    try {
+      // Add the donation to our context
+      await addDonation({
+        amount: parseFloat(amount),
+        charityId: charity.id,
+        charityName: charity.name,
+        email: email,
+        isScheduled: false,
+        region: charity.regions[0] || 'Unknown Region'
+      });
+      
+      // Show success message
+      setShowSuccess(true);
+      
+      // Reset form
+      setAmount('');
+      
+      // Close modal after a delay
+      setTimeout(() => {
+        setShowSuccess(false);
+        setIsProcessing(false);
+        handleClose();
+      }, 2000);
+    } catch (error) {
+      console.error('Error processing donation:', error);
+      setErrorMessage('There was an error processing your donation. Please try again.');
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -48,6 +59,12 @@ const QuickDonationForm = ({ charity, show, handleClose }) => {
           </div>
         ) : (
           <Form onSubmit={handleSubmit}>
+            {errorMessage && (
+              <div className="alert alert-danger" role="alert">
+                {errorMessage}
+              </div>
+            )}
+            
             <Form.Group className="mb-3">
               <Form.Label>Donation Amount</Form.Label>
               <InputGroup>
@@ -59,6 +76,7 @@ const QuickDonationForm = ({ charity, show, handleClose }) => {
                   placeholder="Enter amount"
                   required
                   min="1"
+                  disabled={isProcessing}
                 />
               </InputGroup>
             </Form.Group>
@@ -71,12 +89,31 @@ const QuickDonationForm = ({ charity, show, handleClose }) => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 required
+                disabled={isProcessing}
               />
             </Form.Group>
             
             <div className="d-grid gap-2">
-              <Button variant="success" type="submit" disabled={!amount || parseFloat(amount) <= 0}>
-                Donate Now
+              <Button 
+                variant="success" 
+                type="submit" 
+                disabled={isProcessing || !amount || parseFloat(amount) <= 0}
+              >
+                {isProcessing ? (
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      className="me-2"
+                    />
+                    Processing...
+                  </>
+                ) : (
+                  'Donate Now'
+                )}
               </Button>
             </div>
           </Form>

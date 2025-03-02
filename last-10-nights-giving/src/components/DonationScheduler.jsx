@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button, Container, Card, Row, Col, Alert } from 'react-bootstrap';
+import { Form, Button, Container, Card, Row, Col, Alert, Spinner } from 'react-bootstrap';
 import { useDonations } from '../context/DonationContext';
 
 const DonationScheduler = () => {
@@ -14,6 +14,8 @@ const DonationScheduler = () => {
   });
 
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   
   // Charity options from CharitiesTab component
   const charityOptions = [
@@ -61,28 +63,41 @@ const DonationScheduler = () => {
     return acc;
   }, {});
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsProcessing(true);
+    setErrorMessage('');
     
-    // Find the selected charity's full details
-    const selectedCharityDetails = charityOptions.find(
-      charity => charity.value === donationPreferences.selectedCharity
-    );
-    
-    // Add the donation to our context
-    addDonation({
-      amount: parseFloat(donationPreferences.amount) * 10, // Total for 10 nights
-      charityId: donationPreferences.selectedCharity,
-      charityName: selectedCharityDetails?.label || 'Unknown Charity',
-      email: donationPreferences.email,
-      isScheduled: true,
-      scheduledTime: donationPreferences.notificationTime,
-      region: selectedCharityDetails?.region || 'Unknown Region'
-    });
-    
-    // Show success message
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 3000);
+    try {
+      // Find the selected charity's full details
+      const selectedCharityDetails = charityOptions.find(
+        charity => charity.value === donationPreferences.selectedCharity
+      );
+      
+      // Add the donation to our context
+      await addDonation({
+        amount: parseFloat(donationPreferences.amount) * 10, // Total for 10 nights
+        charityId: donationPreferences.selectedCharity,
+        charityName: selectedCharityDetails?.label || 'Unknown Charity',
+        email: donationPreferences.email,
+        isScheduled: true,
+        scheduledTime: donationPreferences.notificationTime,
+        region: selectedCharityDetails?.region || 'Unknown Region'
+      });
+      
+      // Show success message
+      setShowSuccess(true);
+      
+      // Reset processing state
+      setIsProcessing(false);
+      
+      // Hide success message after a delay
+      setTimeout(() => setShowSuccess(false), 3000);
+    } catch (error) {
+      console.error('Error scheduling donation:', error);
+      setErrorMessage('There was an error scheduling your donation. Please try again.');
+      setIsProcessing(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -106,6 +121,12 @@ const DonationScheduler = () => {
         </Alert>
       )}
       
+      {errorMessage && (
+        <Alert variant="danger" className="mb-4">
+          {errorMessage}
+        </Alert>
+      )}
+      
       <Card className="scheduler-card">
         <Card.Header>
           <h4 className="mb-0">Schedule Your Last 10 Nights Donations</h4>
@@ -124,6 +145,7 @@ const DonationScheduler = () => {
                     placeholder="Enter amount"
                     required
                     min="1"
+                    disabled={isProcessing}
                   />
                   {donationPreferences.amount && (
                     <Form.Text className="text-muted">
@@ -139,6 +161,7 @@ const DonationScheduler = () => {
                     value={donationPreferences.selectedCharity}
                     onChange={handleChange}
                     required
+                    disabled={isProcessing}
                   >
                     <option value="">Choose a charity...</option>
                     
@@ -166,6 +189,7 @@ const DonationScheduler = () => {
                     onChange={handleChange}
                     placeholder="Enter email"
                     required
+                    disabled={isProcessing}
                   />
                 </Form.Group>
 
@@ -177,6 +201,7 @@ const DonationScheduler = () => {
                     value={donationPreferences.notificationTime}
                     onChange={handleChange}
                     required
+                    disabled={isProcessing}
                   />
                   <Form.Text className="text-muted">
                     We'll send you a reminder at this time each night
@@ -186,8 +211,28 @@ const DonationScheduler = () => {
             </Row>
 
             <div className="mt-4">
-              <Button variant="primary" type="submit" size="lg" className="w-100">
-                Schedule Donations
+              <Button 
+                variant="primary" 
+                type="submit" 
+                size="lg" 
+                className="w-100"
+                disabled={isProcessing}
+              >
+                {isProcessing ? (
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      className="me-2"
+                    />
+                    Processing...
+                  </>
+                ) : (
+                  'Schedule Donations'
+                )}
               </Button>
               <div className="text-center mt-3">
                 <small className="text-muted">

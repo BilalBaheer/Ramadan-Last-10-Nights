@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Card, ListGroup, Badge } from 'react-bootstrap';
 import { useDonations } from '../context/DonationContext';
+import ExternalDonationTracker from './ExternalDonationTracker';
 
 const DonationHistory = () => {
   const { donationHistory } = useDonations();
@@ -26,6 +27,8 @@ const DonationHistory = () => {
 
   return (
     <Container className="my-4">
+      <ExternalDonationTracker />
+      
       <Card className="tracker-card">
         <Card.Header className="text-center">
           <h4 className="mb-0">Recent Donations</h4>
@@ -50,6 +53,11 @@ const DonationHistory = () => {
                       <Badge bg="light" text="dark">
                         {donation.region}
                       </Badge>
+                      {donation.isExternal && (
+                        <Badge bg="info" className="ms-1">
+                          External
+                        </Badge>
+                      )}
                     </div>
                   </div>
                 </ListGroup.Item>

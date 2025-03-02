@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Card, Button, Badge, Form, InputGroup, Nav, Tab } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Badge, Form, InputGroup, Nav, Tab, Modal } from 'react-bootstrap';
 import { BsHeart, BsStar, BsGlobe, BsSearch, BsFilter, BsExclamationTriangle } from 'react-icons/bs';
 import QuickDonationForm from './QuickDonationForm';
+import { useDonations } from '../context/DonationContext';
+import { simulateWebhookCallback } from '../services/donationService';
 
 const CharitiesTab = () => {
+  const { trackExternalDonation } = useDonations();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [activeRegion, setActiveRegion] = useState('all');
   const [showDonationModal, setShowDonationModal] = useState(false);
   const [selectedCharity, setSelectedCharity] = useState(null);
-  
+  const [showExternalDonationModal, setShowExternalDonationModal] = useState(false);
+  const [externalDonationAmount, setExternalDonationAmount] = useState('');
+  const [externalDonationCharity, setExternalDonationCharity] = useState(null);
+
   // Sample charity data
   const charities = [
     // Regular charities
@@ -85,7 +91,7 @@ const CharitiesTab = () => {
       donationUrl: 'https://www.zakat.org/donate',
       urgent: false
     },
-    
+
     // Gaza-focused charities
     {
       id: 7,
@@ -123,7 +129,7 @@ const CharitiesTab = () => {
       donationUrl: 'https://www.unrwa.org/donate',
       urgent: true
     },
-    
+
     // Afghanistan-focused charities
     {
       id: 10,
@@ -161,7 +167,7 @@ const CharitiesTab = () => {
       donationUrl: 'https://www.afghanaid.org.uk/donate',
       urgent: true
     },
-    
+
     // Yemen-focused charities
     {
       id: 13,
@@ -187,7 +193,7 @@ const CharitiesTab = () => {
       donationUrl: 'https://www.yemenaid.org/donate',
       urgent: true
     },
-    
+
     // Syria-focused charities
     {
       id: 15,
@@ -213,7 +219,7 @@ const CharitiesTab = () => {
       donationUrl: 'https://www.sams-usa.net/donate',
       urgent: true
     },
-    
+
     // Somalia-focused charities
     {
       id: 17,
@@ -227,7 +233,7 @@ const CharitiesTab = () => {
       donationUrl: 'https://www.somalirelief.org/donate',
       urgent: true
     },
-    
+
     // Other international charities
     {
       id: 18,
@@ -278,11 +284,61 @@ const CharitiesTab = () => {
     const matchesRegion = activeRegion === 'all' || charity.regions.includes(activeRegion);
     return matchesSearch && matchesCategory && matchesRegion;
   });
-  
+
   // Handle opening the donation modal
   const handleDonateClick = (charity) => {
     setSelectedCharity(charity);
     setShowDonationModal(true);
+  };
+
+  // Handle external website visit
+  const handleVisitWebsite = async (charity, event) => {
+    event.preventDefault(); // Prevent default link behavior
+
+    try {
+      // Track the external click
+      const trackingResult = await trackExternalDonation({
+        charityId: charity.id,
+        charityName: charity.name,
+        region: charity.regions[0] || 'Unknown Region',
+        referrerUrl: window.location.href,
+        destinationUrl: charity.website
+      });
+
+      // Store the charity for the external donation modal
+      setExternalDonationCharity(charity);
+
+      // Open the external donation modal
+      setShowExternalDonationModal(true);
+
+      // In a real app, we would redirect to the tracked URL:
+      // window.open(trackingResult.trackedUrl, '_blank');
+    } catch (error) {
+      console.error('Error tracking external donation:', error);
+    }
+  };
+
+  // Handle external donation confirmation
+  const handleExternalDonationConfirm = () => {
+    if (!externalDonationAmount || !externalDonationCharity) return;
+
+    // Simulate a webhook callback with the user-provided amount
+    simulateWebhookCallback({
+      charityId: externalDonationCharity.id,
+      charityName: externalDonationCharity.name,
+      amount: parseFloat(externalDonationAmount),
+      region: externalDonationCharity.regions[0] || 'Unknown Region',
+      timestamp: Date.now(),
+      donorEmail: 'external-donor@example.com'
+    });
+
+    // Reset and close the modal
+    setExternalDonationAmount('');
+    setExternalDonationCharity(null);
+    setShowExternalDonationModal(false);
+
+    // In a real app, now redirect to the charity website
+    window.open(externalDonationCharity.website, '_blank');
   };
 
   return (
@@ -291,7 +347,7 @@ const CharitiesTab = () => {
       <p className="text-center mb-4">
         Choose from our curated list of verified charities to maximize your impact during the blessed last 10 nights.
       </p>
-      
+
       <Tab.Container id="region-tabs" activeKey={activeRegion} onSelect={(k) => setActiveRegion(k)}>
         <Nav variant="pills" className="mb-4 justify-content-center">
           <Nav.Item>
@@ -313,7 +369,7 @@ const CharitiesTab = () => {
             <Nav.Link eventKey="somalia">Somalia</Nav.Link>
           </Nav.Item>
         </Nav>
-        
+
         <Row className="mb-4">
           <Col md={8}>
             <InputGroup>
@@ -343,7 +399,7 @@ const CharitiesTab = () => {
             </InputGroup>
           </Col>
         </Row>
-        
+
         <Tab.Content>
           <Tab.Pane eventKey={activeRegion}>
             <Row xs={1} md={2} lg={3} className="g-4">
@@ -384,9 +440,7 @@ const CharitiesTab = () => {
                         <Button 
                           variant="outline-primary" 
                           size="sm"
-                          href={charity.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          onClick={(e) => handleVisitWebsite(charity, e)}
                         >
                           <BsGlobe className="me-1" /> Visit Website
                         </Button>
@@ -403,7 +457,7 @@ const CharitiesTab = () => {
                 </Col>
               ))}
             </Row>
-            
+
             {filteredCharities.length === 0 && (
               <div className="text-center py-5">
                 <h5>No charities match your search</h5>
@@ -413,7 +467,7 @@ const CharitiesTab = () => {
           </Tab.Pane>
         </Tab.Content>
       </Tab.Container>
-      
+
       {/* Quick Donation Modal */}
       {selectedCharity && (
         <QuickDonationForm 
@@ -422,6 +476,58 @@ const CharitiesTab = () => {
           handleClose={() => setShowDonationModal(false)}
         />
       )}
+
+      {/* External Donation Modal */}
+      <Modal 
+        show={showExternalDonationModal} 
+        onHide={() => setShowExternalDonationModal(false)}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Visiting {externalDonationCharity?.name}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            You're about to visit {externalDonationCharity?.name}'s website to make a donation.
+            To help us track your contribution, please enter the amount you plan to donate:
+          </p>
+          <Form.Group className="mb-3">
+            <Form.Label>Planned Donation Amount</Form.Label>
+            <InputGroup>
+              <InputGroup.Text>$</InputGroup.Text>
+              <Form.Control
+                type="number"
+                value={externalDonationAmount}
+                onChange={(e) => setExternalDonationAmount(e.target.value)}
+                placeholder="Enter amount"
+                min="1"
+              />
+            </InputGroup>
+            <Form.Text className="text-muted">
+              This helps us track your contribution to our overall goal.
+            </Form.Text>
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button 
+            variant="secondary" 
+            onClick={() => {
+              // Just open the website without tracking the amount
+              window.open(externalDonationCharity?.website, '_blank');
+              setShowExternalDonationModal(false);
+            }}
+          >
+            Skip & Visit Website
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={handleExternalDonationConfirm}
+            disabled={!externalDonationAmount || parseFloat(externalDonationAmount) <= 0}
+          >
+            Confirm & Visit
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };
