@@ -68,9 +68,18 @@ const Header = () => {
         </Container>
       </Navbar>
       
-      <div className="mission-banner bg-primary text-white py-2 text-center">
+      <div className="mission-banner py-4 text-center" style={{
+        background: '#1e293b',
+        borderTop: '1px solid rgba(255,255,255,0.1)',
+        borderBottom: '1px solid rgba(255,255,255,0.1)'
+      }}>
         <Container>
-          <p className="mb-0"><strong>Our Goal:</strong> Help you catch Laylatul Qadr by giving charity every night during the last 10 nights of Ramadan</p>
+          <div className="mission-content">
+            <h2 className="text-white mb-0" style={{ fontWeight: '300' }}>
+              <span style={{ color: '#f1c40f', fontWeight: '600' }}>Seek Laylatul Qadr</span> by giving charity 
+              <span style={{ color: '#e74c3c', fontWeight: '600' }}> every night</span> of the last 10 nights
+            </h2>
+          </div>
         </Container>
       </div>
       
