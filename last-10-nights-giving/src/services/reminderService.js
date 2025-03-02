@@ -1,6 +1,6 @@
 // Reminder service for scheduled donations
 
-import { sendDonationConfirmationEmail, sendNightlyReminderEmail } from './emailService';
+import { sendDonationConfirmationEmail, sendNightlyReminderEmail, clearSentEmails } from './emailService';
 
 // Ramadan 2025 dates (estimated)
 // Last 10 nights start around March 22, 2025 (21st night of Ramadan)
@@ -22,8 +22,11 @@ const scheduledTimers = {};
 
 // For demo purposes, use a shorter timeframe to test reminder scheduling
 // This will schedule reminders minutes apart instead of days apart
-const USE_DEMO_MODE = false;
-const DEMO_INTERVAL_MINUTES = 2; // 2 minutes between reminders in demo mode
+const USE_DEMO_MODE = true; // Set to false for production
+const DEMO_INTERVAL_MINUTES = 5; // 5 minutes between reminders in demo mode
+
+// Track which reminders have already been processed
+const processedReminders = new Set();
 
 /**
  * Initialize the reminder service
@@ -31,6 +34,9 @@ const DEMO_INTERVAL_MINUTES = 2; // 2 minutes between reminders in demo mode
  */
 const initializeReminderService = () => {
   console.log('Initializing reminder service');
+  
+  // Clear any existing email tracking
+  clearSentEmails();
   
   // Get scheduled donations from localStorage
   const donationHistory = JSON.parse(localStorage.getItem('donationHistory') || '[]');
@@ -45,6 +51,10 @@ const initializeReminderService = () => {
   
   // Clear any existing timers
   Object.values(scheduledTimers).forEach(timer => clearTimeout(timer));
+  Object.keys(scheduledTimers).forEach(key => delete scheduledTimers[key]);
+  
+  // Clear processed reminders tracking
+  processedReminders.clear();
   
   // Set up reminders for each scheduled donation
   scheduledDonations.forEach(donation => {
@@ -79,6 +89,15 @@ const scheduleReminders = (donation) => {
   // Schedule reminders for each of the last 10 nights
   let nightIndex = 0;
   Object.entries(RAMADAN_LAST_10_NIGHTS).forEach(([night, date]) => {
+    // Create a unique ID for this reminder
+    const reminderId = `${donation.id || Date.now()}_night_${night}`;
+    
+    // Skip if this reminder has already been processed
+    if (processedReminders.has(reminderId)) {
+      console.log(`Reminder for night ${night} already processed, skipping`);
+      return;
+    }
+    
     let reminderTime;
     
     if (USE_DEMO_MODE) {
@@ -100,9 +119,6 @@ const scheduleReminders = (donation) => {
     if (timeUntilReminder > 0) {
       console.log(`Scheduling reminder for night ${night} at ${reminderTime.toLocaleString()}, in ${Math.round(timeUntilReminder / 60000)} minutes`);
       
-      // Create a unique ID for this reminder
-      const reminderId = `${donation.id}_night_${night}`;
-      
       // Clear any existing timer with the same ID
       if (scheduledTimers[reminderId]) {
         clearTimeout(scheduledTimers[reminderId]);
@@ -112,6 +128,10 @@ const scheduleReminders = (donation) => {
       // Schedule the reminder
       scheduledTimers[reminderId] = setTimeout(() => {
         console.log(`Sending reminder for night ${night} to ${donation.email}`);
+        
+        // Mark this reminder as processed
+        processedReminders.add(reminderId);
+        
         sendNightlyReminderEmail(donation, night)
           .then(() => {
             console.log(`Night ${night} reminder sent successfully`);
@@ -149,7 +169,26 @@ const addScheduledDonation = (donation) => {
   scheduleReminders(donation);
 };
 
+/**
+ * Reset the reminder service for testing
+ * Clears all scheduled timers and email tracking
+ */
+const resetReminderService = () => {
+  // Clear all scheduled timers
+  Object.values(scheduledTimers).forEach(timer => clearTimeout(timer));
+  Object.keys(scheduledTimers).forEach(key => delete scheduledTimers[key]);
+  
+  // Clear processed reminders tracking
+  processedReminders.clear();
+  
+  // Clear sent email tracking
+  clearSentEmails();
+  
+  console.log('Reminder service reset');
+};
+
 export {
   initializeReminderService,
-  addScheduledDonation
+  addScheduledDonation,
+  resetReminderService
 };

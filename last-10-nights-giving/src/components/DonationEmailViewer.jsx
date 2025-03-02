@@ -1,175 +1,212 @@
 import React, { useState } from 'react';
 import { Container, Card, Alert, Form, Button, Accordion, Row, Col } from 'react-bootstrap';
-import emailjs from 'emailjs-com';
+import { sendDonationConfirmationEmail, sendNightlyReminderEmail, clearSentEmails } from '../services/emailService';
+import { resetReminderService } from '../services/reminderService';
 
 const DonationEmailViewer = () => {
   const [emailStatus, setEmailStatus] = useState(null);
-  const [emailAddress, setEmailAddress] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [testType, setTestType] = useState('confirmation');
-  
-  const handleTestEmail = async () => {
-    if (!emailAddress) {
+  const [testEmail, setTestEmail] = useState('');
+  const [isSending, setIsSending] = useState(false);
+
+  const handleSendConfirmationEmail = async () => {
+    if (!testEmail) {
       setEmailStatus({
-        type: 'warning',
-        message: 'Please enter your email address'
+        type: 'danger',
+        message: 'Please enter an email address'
       });
       return;
     }
-    
-    setIsLoading(true);
+
+    setIsSending(true);
     setEmailStatus({
       type: 'info',
-      message: `Sending test ${testType} email...`
+      message: 'Sending confirmation email...'
     });
-    
+
     try {
-      // Create test template parameters
-      const templateParams = testType === 'confirmation' 
-        ? {
-            to_email: emailAddress,
-            to_name: emailAddress.split('@')[0],
-            charity_name: 'Test Charity',
-            daily_amount: '10.00',
-            total_amount: '100.00',
-            reminder_time: '8:00 PM'
-          }
-        : {
-            to_email: emailAddress,
-            to_name: emailAddress.split('@')[0],
-            charity_name: 'Test Charity',
-            amount: '10.00',
-            night_number: '21'
-          };
-      
-      console.log(`Sending test ${testType} email to:`, emailAddress);
-      
-      // Send test email directly
-      const response = await emailjs.send(
-        'service_x6teb4m',
-        testType === 'confirmation' ? 'template_8fw5vta' : 'template_s44n7ce',
-        templateParams,
-        'wfhj9VyHSzh-Nm5wG'
-      );
-      
-      console.log('Email response:', response);
+      const donationData = {
+        id: `test_${Date.now()}`,
+        email: testEmail,
+        charityName: 'Islamic Relief',
+        amount: 100,
+        scheduledTime: '21:00'
+      };
+
+      await sendDonationConfirmationEmail(donationData);
       
       setEmailStatus({
         type: 'success',
-        message: `Test ${testType} email sent successfully! Please check your inbox (and spam folder).`
+        message: `Confirmation email sent to ${testEmail}`
       });
     } catch (error) {
-      console.error('Error sending test email:', error);
+      console.error('Error sending confirmation email:', error);
       setEmailStatus({
         type: 'danger',
-        message: `Error sending email: ${error.message || JSON.stringify(error)}`
+        message: `Error sending confirmation email: ${error.message}`
       });
     } finally {
-      setIsLoading(false);
+      setIsSending(false);
+    }
+  };
+
+  const handleSendReminderEmail = async () => {
+    if (!testEmail) {
+      setEmailStatus({
+        type: 'danger',
+        message: 'Please enter an email address'
+      });
+      return;
+    }
+
+    setIsSending(true);
+    setEmailStatus({
+      type: 'info',
+      message: 'Sending reminder email...'
+    });
+
+    try {
+      const donationData = {
+        id: `test_${Date.now()}`,
+        email: testEmail,
+        charityName: 'Islamic Relief',
+        amount: 100,
+        scheduledTime: '21:00'
+      };
+
+      await sendNightlyReminderEmail(donationData, 27);
+      
+      setEmailStatus({
+        type: 'success',
+        message: `Reminder email sent to ${testEmail}`
+      });
+    } catch (error) {
+      console.error('Error sending reminder email:', error);
+      setEmailStatus({
+        type: 'danger',
+        message: `Error sending reminder email: ${error.message}`
+      });
+    } finally {
+      setIsSending(false);
+    }
+  };
+  
+  const handleResetReminderService = () => {
+    try {
+      resetReminderService();
+      setEmailStatus({
+        type: 'success',
+        message: 'Reminder service reset successfully. All scheduled reminders have been cleared.'
+      });
+    } catch (error) {
+      console.error('Error resetting reminder service:', error);
+      setEmailStatus({
+        type: 'danger',
+        message: `Error resetting reminder service: ${error.message}`
+      });
+    }
+  };
+  
+  const handleClearEmailTracking = () => {
+    try {
+      clearSentEmails();
+      setEmailStatus({
+        type: 'success',
+        message: 'Email tracking cleared successfully. Duplicate prevention has been reset.'
+      });
+    } catch (error) {
+      console.error('Error clearing email tracking:', error);
+      setEmailStatus({
+        type: 'danger',
+        message: `Error clearing email tracking: ${error.message}`
+      });
     }
   };
   
   return (
     <Container className="my-4">
       <Card>
-        <Card.Header>
-          <h4 className="mb-0">Email Notifications</h4>
-        </Card.Header>
+        <Card.Header as="h5">Email Notification Tester</Card.Header>
         <Card.Body>
-          <p>
-            The Last 10 Nights Giving Platform sends email notifications for:
-          </p>
-          <ul>
-            <li>Confirmation when you schedule donations</li>
-            <li>Nightly reminders during the last 10 nights of Ramadan</li>
-          </ul>
-          
-          <hr />
-          
-          <h5>Test Email Notifications</h5>
-          <p>
-            Send a test email to verify that notifications are working correctly:
-          </p>
-          
           {emailStatus && (
-            <Alert variant={emailStatus.type} className="mb-3">
+            <Alert 
+              variant={emailStatus.type} 
+              dismissible 
+              onClose={() => setEmailStatus(null)}
+            >
               {emailStatus.message}
-              
-              {emailStatus.type === 'danger' && emailStatus.message.includes('Gmail_API') && (
-                <div className="mt-2">
-                  <strong>Gmail Authentication Issue:</strong> You need to reconnect your Gmail service in EmailJS.
-                </div>
-              )}
             </Alert>
           )}
           
           <Form>
             <Form.Group className="mb-3">
+              <Form.Label>Test Email Address</Form.Label>
               <Form.Control
                 type="email"
-                placeholder="Enter your email address"
-                value={emailAddress}
-                onChange={(e) => setEmailAddress(e.target.value)}
-                disabled={isLoading}
+                placeholder="Enter email"
+                value={testEmail}
+                onChange={(e) => setTestEmail(e.target.value)}
               />
+              <Form.Text className="text-muted">
+                Test emails will be sent to this address.
+              </Form.Text>
             </Form.Group>
             
-            <Row>
+            <Row className="mb-4">
               <Col>
                 <div className="d-grid">
                   <Button 
                     variant="primary" 
-                    onClick={() => {
-                      setTestType('confirmation');
-                      handleTestEmail();
-                    }}
-                    disabled={isLoading}
+                    onClick={handleSendConfirmationEmail}
+                    disabled={isSending}
                   >
-                    {isLoading && testType === 'confirmation' ? 'Sending...' : 'Test Confirmation Email'}
+                    {isSending ? 'Sending...' : 'Send Confirmation Email'}
                   </Button>
                 </div>
               </Col>
               <Col>
                 <div className="d-grid">
                   <Button 
-                    variant="outline-primary" 
-                    onClick={() => {
-                      setTestType('reminder');
-                      handleTestEmail();
-                    }}
-                    disabled={isLoading}
+                    variant="success" 
+                    onClick={handleSendReminderEmail}
+                    disabled={isSending}
                   >
-                    {isLoading && testType === 'reminder' ? 'Sending...' : 'Test Reminder Email'}
+                    {isSending ? 'Sending...' : 'Send Reminder Email'}
                   </Button>
                 </div>
               </Col>
             </Row>
+            
+            <hr />
+            <h5>Admin Controls</h5>
+            <Row className="mt-3">
+              <Col>
+                <div className="d-grid">
+                  <Button 
+                    variant="warning" 
+                    onClick={handleResetReminderService}
+                  >
+                    Reset Reminder Service
+                  </Button>
+                  <Form.Text className="text-muted mt-1">
+                    Clears all scheduled reminders
+                  </Form.Text>
+                </div>
+              </Col>
+              <Col>
+                <div className="d-grid">
+                  <Button 
+                    variant="secondary" 
+                    onClick={handleClearEmailTracking}
+                  >
+                    Clear Email Tracking
+                  </Button>
+                  <Form.Text className="text-muted mt-1">
+                    Resets duplicate prevention
+                  </Form.Text>
+                </div>
+              </Col>
+            </Row>
           </Form>
-          
-          {emailStatus && emailStatus.type === 'danger' && emailStatus.message.includes('Gmail_API') && (
-            <Accordion className="mt-3">
-              <Accordion.Item eventKey="0">
-                <Accordion.Header>How to fix Gmail authentication issue</Accordion.Header>
-                <Accordion.Body>
-                  <p>To fix the "Gmail_API: Request had insufficient authentication scopes" error:</p>
-                  <ol>
-                    <li>Go to the <a href="https://dashboard.emailjs.com/admin/services" target="_blank" rel="noopener noreferrer">EmailJS dashboard → Services</a></li>
-                    <li>Find your Gmail service in the list</li>
-                    <li>Click on the Edit button</li>
-                    <li>Disconnect your current connection</li>
-                    <li>Connect again</li>
-                    <li>Make sure to check the box "Send email on your behalf" when the permission screen appears</li>
-                    <li>Click "Allow" to grant the necessary permissions</li>
-                  </ol>
-                  <p>After reconnecting, try sending the test email again.</p>
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
-          )}
-          
-          <div className="mt-3 small text-muted">
-            Note: All emails are sent using EmailJS. No emails are stored on our servers.
-          </div>
         </Card.Body>
       </Card>
     </Container>

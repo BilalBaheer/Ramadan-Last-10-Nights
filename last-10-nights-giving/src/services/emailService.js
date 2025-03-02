@@ -7,6 +7,9 @@ const EMAILJS_SERVICE_ID = 'service_x6teb4m';
 const EMAILJS_CONFIRMATION_TEMPLATE_ID = 'template_8fw5vta'; 
 const EMAILJS_REMINDER_TEMPLATE_ID = 'template_s44n7ce';
 
+// Track emails that have been sent to prevent duplicates
+const sentEmails = {};
+
 /**
  * Send a confirmation email when a donation is scheduled
  * @param {Object} donationData - Information about the scheduled donation
@@ -14,6 +17,15 @@ const EMAILJS_REMINDER_TEMPLATE_ID = 'template_s44n7ce';
  */
 const sendDonationConfirmationEmail = async (donationData) => {
   console.log('Sending donation confirmation email to:', donationData.email);
+  
+  // Create a unique ID for this confirmation email
+  const emailId = `confirmation_${donationData.id || Date.now()}`;
+  
+  // Check if this confirmation email has already been sent
+  if (sentEmails[emailId]) {
+    console.log('Confirmation email already sent, skipping');
+    return sentEmails[emailId];
+  }
   
   // Format the donation amount for display
   const dailyAmount = (donationData.amount / 10).toFixed(2);
@@ -41,6 +53,10 @@ const sendDonationConfirmationEmail = async (donationData) => {
     );
     
     console.log('Confirmation email sent successfully:', response);
+    
+    // Store the response to prevent duplicate sends
+    sentEmails[emailId] = response;
+    
     return response;
   } catch (error) {
     console.error('Error sending confirmation email:', error);
@@ -56,6 +72,15 @@ const sendDonationConfirmationEmail = async (donationData) => {
  */
 const sendNightlyReminderEmail = async (donationData, nightNumber) => {
   console.log(`Sending night ${nightNumber} reminder email to:`, donationData.email);
+  
+  // Create a unique ID for this reminder email
+  const emailId = `reminder_${donationData.id}_night_${nightNumber}`;
+  
+  // Check if this reminder email has already been sent
+  if (sentEmails[emailId]) {
+    console.log(`Night ${nightNumber} reminder already sent, skipping`);
+    return sentEmails[emailId];
+  }
   
   // Format the donation amount for display
   const dailyAmount = (donationData.amount / 10).toFixed(2);
@@ -81,6 +106,10 @@ const sendNightlyReminderEmail = async (donationData, nightNumber) => {
     );
     
     console.log('Reminder email sent successfully:', response);
+    
+    // Store the response to prevent duplicate sends
+    sentEmails[emailId] = response;
+    
     return response;
   } catch (error) {
     console.error('Error sending reminder email:', error);
@@ -104,6 +133,15 @@ const formatTime = (time24) => {
   return `${hours12}:${minutes} ${ampm}`;
 };
 
+/**
+ * Clear sent email tracking
+ * Useful for testing
+ */
+const clearSentEmails = () => {
+  Object.keys(sentEmails).forEach(key => delete sentEmails[key]);
+  console.log('Cleared sent email tracking');
+};
+
 // Initialize EmailJS
 const initializeEmailService = () => {
   console.log('Initializing email service');
@@ -113,5 +151,6 @@ const initializeEmailService = () => {
 export {
   sendDonationConfirmationEmail,
   sendNightlyReminderEmail,
-  initializeEmailService
+  initializeEmailService,
+  clearSentEmails
 };
