@@ -12,6 +12,52 @@ const DonationScheduler = () => {
   });
 
   const [showSuccess, setShowSuccess] = useState(false);
+  
+  // Charity options from CharitiesTab component
+  const charityOptions = [
+    // Regular charities
+    { value: 'islamic-relief', label: 'Islamic Relief', region: 'Multiple Regions' },
+    { value: 'muslim-aid', label: 'Muslim Aid', region: 'Multiple Regions' },
+    { value: 'penny-appeal', label: 'Penny Appeal', region: 'Multiple Regions' },
+    { value: 'human-appeal', label: 'Human Appeal', region: 'Multiple Regions' },
+    { value: 'muslim-hands', label: 'Muslim Hands', region: 'Multiple Regions' },
+    { value: 'zakat-foundation', label: 'Zakat Foundation', region: 'Multiple Regions' },
+    
+    // Gaza-focused charities
+    { value: 'pcrf', label: 'Palestine Children\'s Relief Fund', region: 'Gaza' },
+    { value: 'map', label: 'Medical Aid for Palestinians', region: 'Gaza' },
+    { value: 'unrwa', label: 'UNRWA Gaza Emergency Appeal', region: 'Gaza' },
+    
+    // Afghanistan-focused charities
+    { value: 'afghanistan-relief', label: 'Afghanistan Relief Fund', region: 'Afghanistan' },
+    { value: 'women-for-afghan', label: 'Women for Afghan Women', region: 'Afghanistan' },
+    { value: 'afghanaid', label: 'Afghanaid', region: 'Afghanistan' },
+    
+    // Yemen-focused charities
+    { value: 'yemen-relief', label: 'Yemen Relief and Reconstruction Foundation', region: 'Yemen' },
+    { value: 'yemen-aid', label: 'Yemen Aid', region: 'Yemen' },
+    
+    // Syria-focused charities
+    { value: 'syria-relief', label: 'Syria Relief', region: 'Syria' },
+    { value: 'sams', label: 'Syrian American Medical Society', region: 'Syria' },
+    
+    // Somalia-focused charities
+    { value: 'somali-relief', label: 'Somali Relief and Development', region: 'Somalia' },
+    
+    // Other international charities
+    { value: 'unicef', label: 'UNICEF', region: 'Multiple Regions' },
+    { value: 'doctors-without-borders', label: 'Doctors Without Borders', region: 'Multiple Regions' },
+    { value: 'world-food-programme', label: 'World Food Programme', region: 'Multiple Regions' }
+  ];
+
+  // Group charity options by region
+  const groupedCharityOptions = charityOptions.reduce((acc, charity) => {
+    if (!acc[charity.region]) {
+      acc[charity.region] = [];
+    }
+    acc[charity.region].push(charity);
+    return acc;
+  }, {});
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -75,9 +121,17 @@ const DonationScheduler = () => {
                     required
                   >
                     <option value="">Choose a charity...</option>
-                    <option value="islamic-relief">Islamic Relief USA</option>
-                    <option value="helping-hand">Helping Hand USA</option>
-                    <option value="zakat-foundation">Zakat Foundation</option>
+                    
+                    {/* Render charity options grouped by region */}
+                    {Object.keys(groupedCharityOptions).sort().map(region => (
+                      <optgroup key={region} label={region}>
+                        {groupedCharityOptions[region].map(charity => (
+                          <option key={charity.value} value={charity.value}>
+                            {charity.label}
+                          </option>
+                        ))}
+                      </optgroup>
+                    ))}
                   </Form.Select>
                 </Form.Group>
               </Col>
