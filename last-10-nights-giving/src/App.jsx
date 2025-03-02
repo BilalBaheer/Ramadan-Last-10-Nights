@@ -22,16 +22,16 @@ function App() {
           <Tab.Container id="main-tabs" activeKey={activeTab} onSelect={(k) => setActiveTab(k)}>
             <Nav variant="pills" className="main-tabs mb-4 justify-content-center">
               <Nav.Item>
-                <Nav.Link eventKey="charities">Charity Directory</Nav.Link>
+                <Nav.Link eventKey="charities" href="#charities">Charity Directory</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="ai">AI Recommendations</Nav.Link>
+                <Nav.Link eventKey="ai" href="#ai">AI Recommendations</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="schedule">Schedule Donations</Nav.Link>
+                <Nav.Link eventKey="schedule" href="#schedule">Schedule Donations</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="tracker">Donation Tracker</Nav.Link>
+                <Nav.Link eventKey="tracker" href="#tracker">Donation Tracker</Nav.Link>
               </Nav.Item>
             </Nav>
             

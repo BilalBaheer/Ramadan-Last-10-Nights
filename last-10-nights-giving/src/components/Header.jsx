@@ -1,8 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 import { BsMoonStars, BsHeart, BsPersonCircle } from 'react-icons/bs';
 
 const Header = () => {
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  });
+
+  useEffect(() => {
+    // Ramadan 2025 is expected to begin around March 1, 2025
+    // Last 10 nights would start around March 22, 2025 (21st night of Ramadan)
+    const lastTenNightsDate = new Date('March 22, 2025 00:00:00');
+    
+    const calculateTimeLeft = () => {
+      const now = new Date();
+      const difference = lastTenNightsDate - now;
+      
+      if (difference > 0) {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((difference / 1000 / 60) % 60),
+          seconds: Math.floor((difference / 1000) % 60)
+        });
+      } else {
+        // If we're already in the last 10 nights
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      }
+    };
+    
+    calculateTimeLeft();
+    const timer = setInterval(calculateTimeLeft, 1000);
+    
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleScheduleDonations = () => {
+    // Scroll to the scheduler tab
+    document.querySelector('a[href="#schedule"]').click();
+  };
+
   return (
     <header className="header-wrapper">
       <Navbar bg="dark" variant="dark" expand="lg" className="py-3">
@@ -42,21 +82,26 @@ const Header = () => {
           <div className="countdown-timer mb-4">
             <div className="d-flex justify-content-center">
               <div className="countdown-item">
-                <span className="countdown-number">12</span>
+                <span className="countdown-number">{String(timeLeft.days).padStart(2, '0')}</span>
                 <span className="countdown-label">Days</span>
               </div>
               <div className="countdown-item">
-                <span className="countdown-number">08</span>
+                <span className="countdown-number">{String(timeLeft.hours).padStart(2, '0')}</span>
                 <span className="countdown-label">Hours</span>
               </div>
               <div className="countdown-item">
-                <span className="countdown-number">45</span>
+                <span className="countdown-number">{String(timeLeft.minutes).padStart(2, '0')}</span>
                 <span className="countdown-label">Minutes</span>
               </div>
             </div>
             <p className="countdown-caption">Until the Last 10 Nights begin</p>
           </div>
-          <Button variant="primary" size="lg" className="px-4 py-2">
+          <Button 
+            variant="primary" 
+            size="lg" 
+            className="px-4 py-2"
+            onClick={handleScheduleDonations}
+          >
             Schedule Your Donations
           </Button>
         </Container>
