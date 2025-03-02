@@ -74,8 +74,8 @@ const DonationScheduler = () => {
         charity => charity.value === donationPreferences.selectedCharity
       );
       
-      // Add the donation to our context
-      await addDonation({
+      // Create donation data object
+      const donationData = {
         amount: parseFloat(donationPreferences.amount) * 10, // Total for 10 nights
         charityId: donationPreferences.selectedCharity,
         charityName: selectedCharityDetails?.label || 'Unknown Charity',
@@ -83,7 +83,12 @@ const DonationScheduler = () => {
         isScheduled: true,
         scheduledTime: donationPreferences.notificationTime,
         region: selectedCharityDetails?.region || 'Unknown Region'
-      });
+      };
+      
+      // Add the donation to our context
+      // This will trigger the reminderService to send confirmation email
+      // and schedule nightly reminders
+      await addDonation(donationData);
       
       // Show success message
       setShowSuccess(true);

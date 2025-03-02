@@ -12,6 +12,7 @@ A comprehensive donation management platform designed for Ramadan's last 10 nigh
 - [Architecture](#architecture)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Email Notification System](#email-notification-system)
 - [External Donation Tracking](#external-donation-tracking)
 - [Donation Scheduling](#donation-scheduling)
 - [Contributing](#contributing)
@@ -39,6 +40,7 @@ The platform allows users to:
 - Schedule donations for specific nights
 - Set up recurring donations
 - Email reminders for scheduled donations
+- Customizable notification times
 
 ### 🌐 External Donation Tracking
 - Track donations made directly on charity websites
@@ -65,12 +67,14 @@ The platform allows users to:
 - **React Bootstrap**: UI component library
 - **Context API**: State management
 - **localStorage**: Client-side data persistence
+- **EmailJS**: Email notification service
 
 ### Key Dependencies
 - `react` & `react-dom`: Core React libraries
 - `react-bootstrap`: UI component framework
 - `react-bootstrap-icons` & `react-icons`: Icon libraries
 - `bootstrap`: CSS framework
+- `emailjs-com`: Email notification service
 
 ## 🏗️ Architecture
 
@@ -83,6 +87,7 @@ The platform allows users to:
 - **DonationTracker**: Visualizes donation progress
 - **ExternalDonationTracker**: Tracks and displays external donation activity
 - **DonationHistory**: Shows complete donation history
+- **DonationEmailViewer**: Tests and previews email notifications
 
 ### Data Flow
 1. User interacts with donation forms or charity links
@@ -159,11 +164,38 @@ The scheduling system allows users to plan their donations for specific nights:
 - Set different amounts for each night
 - Receive email reminders
 - Automatic processing on the scheduled date
+- Customizable notification times
 
 ### Implementation
 - Uses localStorage to persist scheduled donations
 - Simulates a backend service for processing scheduled donations
 - Provides a visual calendar interface for easy scheduling
+- Integrates with EmailJS for sending reminders
+
+## 📧 Email Notification System
+
+The platform includes a comprehensive email notification system to keep users informed about their donations:
+
+### Features
+- **Confirmation Emails**: Sent immediately when a donation is scheduled
+- **Nightly Reminders**: Automatically sent during each of the last 10 nights of Ramadan
+- **Customizable Timing**: Users can select their preferred reminder time
+- **Email Testing**: Admin interface to test email templates and delivery
+
+### Implementation Details
+- **EmailJS Integration**: Uses EmailJS service for reliable email delivery without a backend
+- **Template-Based Emails**: Customized templates for different notification types
+- **Scheduled Reminders**: Intelligent scheduling system that sends emails at the right time
+- **Email Templates**:
+  - Confirmation template: Includes donation details, charity information, and schedule
+  - Reminder template: Night-specific reminders with donation amount and charity information
+
+### How It Works
+1. When a user schedules a donation, they provide their email address and preferred reminder time
+2. The system sends an immediate confirmation email with donation details
+3. The reminder service schedules emails for each of the last 10 nights (March 22-31, 2025)
+4. At the specified time on each night, users receive a reminder email with that night's donation details
+5. Administrators can test both email types through the DonationEmailViewer component
 
 ## 🤝 Contributing
 

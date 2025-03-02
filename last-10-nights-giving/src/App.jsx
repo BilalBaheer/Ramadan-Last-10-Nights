@@ -9,6 +9,7 @@ import AboutSection from './components/AboutSection';
 import DonationHistory from './components/DonationHistory';
 import CharitiesTab from './components/CharitiesTab';
 import ResourcesTab from './components/ResourcesTab';
+import DonationEmailViewer from './components/DonationEmailViewer';
 import { DonationProvider } from './context/DonationContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -56,12 +57,14 @@ function App() {
                 <CharitiesTab />
               </Tab.Pane>
               <Tab.Pane eventKey="tracker">
+                <h2 className="text-center mb-4">Donation Tracker</h2>
                 <Row>
                   <Col lg={8}>
                     <DonationTracker />
                   </Col>
                   <Col lg={4}>
                     <DonationHistory />
+                    <DonationEmailViewer />
                   </Col>
                 </Row>
               </Tab.Pane>

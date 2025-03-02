@@ -6,6 +6,7 @@ import {
   getPendingDonations,
   getConfirmedExternalDonations
 } from '../services/donationService';
+import { initializeReminderService, addScheduledDonation } from '../services/reminderService';
 
 // Create the donation context
 const DonationContext = createContext();
@@ -67,6 +68,9 @@ export const DonationProvider = ({ children }) => {
       console.log('Webhooks registered:', result);
     });
     
+    // Initialize the reminder service
+    initializeReminderService();
+    
     // Clean up event listener on unmount
     return () => {
       window.removeEventListener('externalDonationConfirmed', handleExternalDonationConfirmed);
@@ -109,6 +113,13 @@ export const DonationProvider = ({ children }) => {
       
       // Save to localStorage
       localStorage.setItem('donationHistory', JSON.stringify(updatedHistory));
+      
+      // If this is a scheduled donation, add it to the reminder service
+      // The reminder service will handle sending the confirmation email
+      // and scheduling the nightly reminders
+      if (newDonation.isScheduled) {
+        addScheduledDonation(newDonation);
+      }
       
       return newDonation;
     } catch (error) {
