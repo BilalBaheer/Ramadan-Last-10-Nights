@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { Card, Button, Container, Row, Col, Form, InputGroup } from 'react-bootstrap';
-import { Search } from 'react-bootstrap-icons';
+import { Card, Button, Container, Row, Col } from 'react-bootstrap';
 
 const CharityList = () => {
-  const [searchTerm, setSearchTerm] = useState('');
   const [charities] = useState([
     {
       id: 1,
@@ -37,29 +35,10 @@ const CharityList = () => {
     }
   ]);
 
-  const filteredCharities = charities.filter(charity =>
-    charity.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    charity.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    charity.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
     <Container className="my-4">
-      <div className="mb-4">
-        <InputGroup>
-          <InputGroup.Text>
-            <Search />
-          </InputGroup.Text>
-          <Form.Control
-            placeholder="Search charities by name, category, or description..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </InputGroup>
-      </div>
-
       <Row>
-        {filteredCharities.map(charity => (
+        {charities.map(charity => (
           <Col key={charity.id} md={4} className="mb-4">
             <Card className="charity-card h-100">
               <Card.Img variant="top" src={charity.imageUrl} alt={charity.name} />
