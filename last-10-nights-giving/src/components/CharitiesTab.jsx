@@ -26,7 +26,8 @@ const CharitiesTab = () => {
       categories: ['Emergency Relief', 'Water', 'Education'],
       regions: ['gaza', 'afghanistan', 'syria', 'yemen'],
       rating: 4.8,
-      image: 'https://via.placeholder.com/300x200?text=Islamic+Relief',
+      image: '/charity-logos/islamic-relief.png',
+      logoColor: '#0C8A43',
       website: 'https://irusa.org',
       donationUrl: 'https://irusa.org/donate/',
       urgent: true
@@ -38,7 +39,8 @@ const CharitiesTab = () => {
       categories: ['Poverty', 'Healthcare', 'Orphans'],
       regions: ['gaza', 'pakistan', 'somalia'],
       rating: 4.7,
-      image: 'https://via.placeholder.com/300x200?text=Muslim+Aid',
+      image: '/charity-logos/muslim-aid.png',
+      logoColor: '#00A8E8',
       website: 'https://muslimaid.org',
       donationUrl: 'https://muslimaid.org/donate/',
       urgent: false
@@ -50,7 +52,8 @@ const CharitiesTab = () => {
       categories: ['Orphans', 'Water', 'Food'],
       regions: ['gaza', 'afghanistan', 'pakistan'],
       rating: 4.6,
-      image: 'https://via.placeholder.com/300x200?text=Penny+Appeal',
+      image: '/charity-logos/penny-appeal.png',
+      logoColor: '#F26522',
       website: 'https://pennyappeal.org',
       donationUrl: 'https://pennyappeal.org/donate',
       urgent: false
@@ -62,7 +65,8 @@ const CharitiesTab = () => {
       categories: ['Emergency Relief', 'Education', 'Healthcare'],
       regions: ['gaza', 'syria', 'yemen'],
       rating: 4.5,
-      image: 'https://via.placeholder.com/300x200?text=Human+Appeal',
+      image: '/charity-logos/human-appeal.png',
+      logoColor: '#00A651',
       website: 'https://humanappeal.org',
       donationUrl: 'https://humanappeal.org/donate',
       urgent: false
@@ -74,7 +78,8 @@ const CharitiesTab = () => {
       categories: ['Water', 'Food', 'Education'],
       regions: ['gaza', 'afghanistan', 'yemen'],
       rating: 4.7,
-      image: 'https://via.placeholder.com/300x200?text=Muslim+Hands',
+      image: '/charity-logos/muslim-hands.png',
+      logoColor: '#009639',
       website: 'https://muslimhands.org',
       donationUrl: 'https://muslimhands.org/donate',
       urgent: false
@@ -86,7 +91,8 @@ const CharitiesTab = () => {
       categories: ['Zakat', 'Education', 'Orphans'],
       regions: ['gaza', 'syria', 'yemen'],
       rating: 4.6,
-      image: 'https://via.placeholder.com/300x200?text=Zakat+Foundation',
+      image: '/charity-logos/zakat-foundation.png',
+      logoColor: '#00843D',
       website: 'https://www.zakat.org',
       donationUrl: 'https://www.zakat.org/donate',
       urgent: false
@@ -100,7 +106,8 @@ const CharitiesTab = () => {
       categories: ['Healthcare', 'Children', 'Emergency Relief'],
       regions: ['gaza'],
       rating: 4.9,
-      image: 'https://via.placeholder.com/300x200?text=PCRF',
+      image: '/charity-logos/pcrf.png',
+      logoColor: '#C8102E',
       website: 'https://www.pcrf.net',
       donationUrl: 'https://www.pcrf.net/donate',
       urgent: true
@@ -112,7 +119,8 @@ const CharitiesTab = () => {
       categories: ['Healthcare', 'Emergency Relief'],
       regions: ['gaza'],
       rating: 4.8,
-      image: 'https://via.placeholder.com/300x200?text=MAP',
+      image: '/charity-logos/map.png',
+      logoColor: '#E30613',
       website: 'https://www.map.org.uk',
       donationUrl: 'https://www.map.org.uk/donate/donate',
       urgent: true
@@ -124,7 +132,8 @@ const CharitiesTab = () => {
       categories: ['Emergency Relief', 'Food', 'Healthcare'],
       regions: ['gaza'],
       rating: 4.7,
-      image: 'https://via.placeholder.com/300x200?text=UNRWA',
+      image: '/charity-logos/unrwa.png',
+      logoColor: '#009FE3',
       website: 'https://www.unrwa.org',
       donationUrl: 'https://www.unrwa.org/donate',
       urgent: true
@@ -138,7 +147,8 @@ const CharitiesTab = () => {
       categories: ['Emergency Relief', 'Food', 'Healthcare'],
       regions: ['afghanistan'],
       rating: 4.6,
-      image: 'https://via.placeholder.com/300x200?text=Afghanistan+Relief',
+      image: '/charity-logos/afghanistan-relief.png',
+      logoColor: '#FFC080',
       website: 'https://www.afghanistanrelief.org',
       donationUrl: 'https://www.afghanistanrelief.org/donate',
       urgent: true
@@ -150,7 +160,8 @@ const CharitiesTab = () => {
       categories: ['Women', 'Education', 'Human Rights'],
       regions: ['afghanistan'],
       rating: 4.8,
-      image: 'https://via.placeholder.com/300x200?text=Women+for+Afghan+Women',
+      image: '/charity-logos/women-for-afghan-women.png',
+      logoColor: '#FF69B4',
       website: 'https://womenforafghanwomen.org',
       donationUrl: 'https://womenforafghanwomen.org/donate',
       urgent: true
@@ -162,7 +173,8 @@ const CharitiesTab = () => {
       categories: ['Poverty', 'Water', 'Education'],
       regions: ['afghanistan'],
       rating: 4.7,
-      image: 'https://via.placeholder.com/300x200?text=Afghanaid',
+      image: '/charity-logos/afghanaid.png',
+      logoColor: '#009639',
       website: 'https://www.afghanaid.org.uk',
       donationUrl: 'https://www.afghanaid.org.uk/donate',
       urgent: true
@@ -176,7 +188,8 @@ const CharitiesTab = () => {
       categories: ['Emergency Relief', 'Food', 'Healthcare'],
       regions: ['yemen'],
       rating: 4.8,
-      image: 'https://via.placeholder.com/300x200?text=Yemen+Relief',
+      image: '/charity-logos/yemen-relief.png',
+      logoColor: '#FFC080',
       website: 'https://www.yemenfoundation.org',
       donationUrl: 'https://www.yemenfoundation.org/donate',
       urgent: true
@@ -188,7 +201,8 @@ const CharitiesTab = () => {
       categories: ['Food', 'Healthcare', 'Water'],
       regions: ['yemen'],
       rating: 4.7,
-      image: 'https://via.placeholder.com/300x200?text=Yemen+Aid',
+      image: '/charity-logos/yemen-aid.png',
+      logoColor: '#FF69B4',
       website: 'https://www.yemenaid.org',
       donationUrl: 'https://www.yemenaid.org/donate',
       urgent: true
@@ -202,7 +216,8 @@ const CharitiesTab = () => {
       categories: ['Emergency Relief', 'Healthcare', 'Education'],
       regions: ['syria'],
       rating: 4.8,
-      image: 'https://via.placeholder.com/300x200?text=Syria+Relief',
+      image: '/charity-logos/syria-relief.png',
+      logoColor: '#FFC080',
       website: 'https://www.syriarelief.org.uk',
       donationUrl: 'https://www.syriarelief.org.uk/donate',
       urgent: true
@@ -214,7 +229,8 @@ const CharitiesTab = () => {
       categories: ['Healthcare', 'Emergency Relief'],
       regions: ['syria'],
       rating: 4.9,
-      image: 'https://via.placeholder.com/300x200?text=SAMS',
+      image: '/charity-logos/syrian-american-medical-society.png',
+      logoColor: '#FF69B4',
       website: 'https://www.sams-usa.net',
       donationUrl: 'https://www.sams-usa.net/donate',
       urgent: true
@@ -228,7 +244,8 @@ const CharitiesTab = () => {
       categories: ['Emergency Relief', 'Food', 'Water'],
       regions: ['somalia'],
       rating: 4.6,
-      image: 'https://via.placeholder.com/300x200?text=Somali+Relief',
+      image: '/charity-logos/somali-relief.png',
+      logoColor: '#FFC080',
       website: 'https://www.somalirelief.org',
       donationUrl: 'https://www.somalirelief.org/donate',
       urgent: true
@@ -242,7 +259,8 @@ const CharitiesTab = () => {
       categories: ['Children', 'Education', 'Healthcare'],
       regions: ['gaza', 'afghanistan', 'syria', 'yemen', 'somalia'],
       rating: 4.9,
-      image: 'https://via.placeholder.com/300x200?text=UNICEF',
+      image: '/charity-logos/unicef.png',
+      logoColor: '#FF69B4',
       website: 'https://www.unicef.org',
       donationUrl: 'https://www.unicef.org/donate',
       urgent: false
@@ -254,7 +272,8 @@ const CharitiesTab = () => {
       categories: ['Healthcare', 'Emergency Relief'],
       regions: ['gaza', 'afghanistan', 'syria', 'yemen', 'somalia'],
       rating: 4.9,
-      image: 'https://via.placeholder.com/300x200?text=Doctors+Without+Borders',
+      image: '/charity-logos/doctors-without-borders.png',
+      logoColor: '#FFC080',
       website: 'https://www.doctorswithoutborders.org',
       donationUrl: 'https://www.doctorswithoutborders.org/donate',
       urgent: false
@@ -266,7 +285,8 @@ const CharitiesTab = () => {
       categories: ['Food', 'Emergency Relief'],
       regions: ['gaza', 'afghanistan', 'syria', 'yemen', 'somalia'],
       rating: 4.7,
-      image: 'https://via.placeholder.com/300x200?text=World+Food+Programme',
+      image: '/charity-logos/world-food-programme.png',
+      logoColor: '#FF69B4',
       website: 'https://www.wfp.org',
       donationUrl: 'https://www.wfp.org/donate',
       urgent: false
@@ -411,7 +431,11 @@ const CharitiesTab = () => {
                         <BsExclamationTriangle /> Urgent Need
                       </div>
                     )}
-                    <Card.Img variant="top" src={charity.image} />
+                    <div className="charity-logo-container" style={{ backgroundColor: charity.logoColor || '#f8f9fa' }}>
+                      <div className="charity-logo-placeholder">
+                        {charity.name}
+                      </div>
+                    </div>
                     <Card.Body>
                       <div className="d-flex justify-content-between align-items-start mb-2">
                         <Card.Title>{charity.name}</Card.Title>
