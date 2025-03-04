@@ -7,6 +7,11 @@ import {
   getConfirmedExternalDonations
 } from '../services/donationService';
 import { initializeReminderService, addScheduledDonation } from '../services/reminderService';
+import { 
+  initializeStorage, 
+  loadDonationData, 
+  saveDonationData 
+} from '../services/dataStorage';
 
 // Create the donation context
 const DonationContext = createContext();
@@ -20,6 +25,7 @@ export const DonationProvider = ({ children }) => {
   const [totalDonations, setTotalDonations] = useState(0);
   const [donationHistory, setDonationHistory] = useState([]);
   const [pendingDonations, setPendingDonations] = useState([]);
+  const [lastUpdated, setLastUpdated] = useState(Date.now());
   const [nightlyDonations, setNightlyDonations] = useState({
     21: 0,
     22: 0,
@@ -33,32 +39,51 @@ export const DonationProvider = ({ children }) => {
     30: 0
   });
 
-  // Load donation data from localStorage on component mount
+  // Load donation data from file storage on component mount
   useEffect(() => {
-    const savedDonations = localStorage.getItem('donationHistory');
-    if (savedDonations) {
-      const parsedDonations = JSON.parse(savedDonations);
-      setDonationHistory(parsedDonations);
-      
-      // Calculate total donations
-      const total = parsedDonations.reduce((sum, donation) => sum + donation.amount, 0);
-      setTotalDonations(total);
-      
-      // Calculate nightly breakdown
-      const nightlyBreakdown = { ...nightlyDonations };
-      parsedDonations.forEach(donation => {
-        const date = new Date(donation.timestamp);
-        const day = date.getDate();
-        if (day >= 21 && day <= 30) {
-          nightlyBreakdown[day] = (nightlyBreakdown[day] || 0) + donation.amount;
+    const loadData = async () => {
+      try {
+        // Initialize storage
+        await initializeStorage();
+        
+        // Load donation data from file
+        const data = await loadDonationData();
+        
+        if (data) {
+          setDonationHistory(data.donationHistory || []);
+          setPendingDonations(data.pendingDonations || []);
+          setTotalDonations(data.totalDonations || 0);
+          setNightlyDonations(data.nightlyDonations || nightlyDonations);
+          setLastUpdated(data.lastUpdated || Date.now());
         }
-      });
-      setNightlyDonations(nightlyBreakdown);
-    }
+      } catch (error) {
+        console.error('Error loading donation data:', error);
+        
+        // Fallback to localStorage if file storage fails
+        const savedDonations = localStorage.getItem('donationHistory');
+        if (savedDonations) {
+          const parsedDonations = JSON.parse(savedDonations);
+          setDonationHistory(parsedDonations);
+          
+          // Calculate total donations
+          const total = parsedDonations.reduce((sum, donation) => sum + donation.amount, 0);
+          setTotalDonations(total);
+          
+          // Calculate nightly breakdown
+          const nightlyBreakdown = { ...nightlyDonations };
+          parsedDonations.forEach(donation => {
+            const date = new Date(donation.timestamp);
+            const day = date.getDate();
+            if (day >= 21 && day <= 30) {
+              nightlyBreakdown[day] = (nightlyBreakdown[day] || 0) + donation.amount;
+            }
+          });
+          setNightlyDonations(nightlyBreakdown);
+        }
+      }
+    };
     
-    // Load pending donations
-    const pendingDons = getPendingDonations();
-    setPendingDonations(pendingDons);
+    loadData();
     
     // Register webhook event listener
     window.addEventListener('externalDonationConfirmed', handleExternalDonationConfirmed);
@@ -76,6 +101,34 @@ export const DonationProvider = ({ children }) => {
       window.removeEventListener('externalDonationConfirmed', handleExternalDonationConfirmed);
     };
   }, []);
+
+  // Save donation data to file storage whenever it changes
+  useEffect(() => {
+    const saveData = async () => {
+      try {
+        await saveDonationData({
+          donationHistory,
+          pendingDonations,
+          totalDonations,
+          nightlyDonations,
+          lastUpdated: Date.now()
+        });
+        
+        // Update last updated timestamp
+        setLastUpdated(Date.now());
+        
+        // Also save to localStorage as a backup
+        localStorage.setItem('donationHistory', JSON.stringify(donationHistory));
+      } catch (error) {
+        console.error('Error saving donation data:', error);
+      }
+    };
+    
+    // Only save if we have donation history (avoid saving empty data on initial load)
+    if (donationHistory.length > 0) {
+      saveData();
+    }
+  }, [donationHistory, pendingDonations, totalDonations, nightlyDonations]);
 
   // Add a new donation
   const addDonation = async (donationData) => {
@@ -111,12 +164,7 @@ export const DonationProvider = ({ children }) => {
         setNightlyDonations(updatedNightlyDonations);
       }
       
-      // Save to localStorage
-      localStorage.setItem('donationHistory', JSON.stringify(updatedHistory));
-      
       // If this is a scheduled donation, add it to the reminder service
-      // The reminder service will handle sending the confirmation email
-      // and scheduling the nightly reminders
       if (newDonation.isScheduled) {
         addScheduledDonation(newDonation);
       }
@@ -188,69 +236,39 @@ export const DonationProvider = ({ children }) => {
     );
     setPendingDonations(updatedPendingDonations);
     
-    // Save to localStorage
-    localStorage.setItem('donationHistory', JSON.stringify(updatedHistory));
-    
     console.log('External donation confirmed and added to history:', newDonation);
   };
 
-  // Load confirmed external donations from localStorage
-  useEffect(() => {
-    const confirmedExternalDonations = getConfirmedExternalDonations();
+  // Reset all donation data (admin function)
+  const resetDonations = async () => {
+    setTotalDonations(0);
+    setDonationHistory([]);
+    setNightlyDonations({
+      21: 0, 22: 0, 23: 0, 24: 0, 25: 0,
+      26: 0, 27: 0, 28: 0, 29: 0, 30: 0
+    });
     
-    // Add any confirmed external donations that aren't already in the history
-    if (confirmedExternalDonations.length > 0) {
-      const existingIds = new Set(donationHistory.map(d => d.id));
-      
-      const newExternalDonations = confirmedExternalDonations
-        .filter(donation => !existingIds.has(donation.transactionId))
-        .map(donation => ({
-          id: donation.transactionId || `ext_donation_${Date.now()}`,
-          amount: donation.amount,
-          charityId: donation.charityId,
-          charityName: donation.charityName,
-          timestamp: donation.timestamp || Date.now(),
-          email: donation.donorEmail || 'anonymous@example.com',
-          isScheduled: false,
-          region: donation.region || 'General',
-          isExternal: true,
-          externalSource: donation.destinationUrl
-        }));
-      
-      if (newExternalDonations.length > 0) {
-        const updatedHistory = [...donationHistory, ...newExternalDonations];
-        setDonationHistory(updatedHistory);
-        
-        // Update total donations
-        const additionalTotal = newExternalDonations.reduce((sum, donation) => sum + donation.amount, 0);
-        setTotalDonations(totalDonations + additionalTotal);
-        
-        // Update nightly breakdown
-        const updatedNightlyDonations = { ...nightlyDonations };
-        newExternalDonations.forEach(donation => {
-          const date = new Date(donation.timestamp);
-          const day = date.getDate();
-          if (day >= 21 && day <= 30) {
-            updatedNightlyDonations[day] = (updatedNightlyDonations[day] || 0) + donation.amount;
-          }
-        });
-        setNightlyDonations(updatedNightlyDonations);
-        
-        // Save to localStorage
-        localStorage.setItem('donationHistory', JSON.stringify(updatedHistory));
-      }
+    // Clear localStorage backup
+    localStorage.removeItem('donationHistory');
+    localStorage.removeItem('pendingDonations');
+    localStorage.removeItem('confirmedExternalDonations');
+    
+    // Reset file storage
+    try {
+      await saveDonationData({
+        donationHistory: [],
+        pendingDonations: [],
+        totalDonations: 0,
+        nightlyDonations: {
+          21: 0, 22: 0, 23: 0, 24: 0, 25: 0,
+          26: 0, 27: 0, 28: 0, 29: 0, 30: 0
+        },
+        lastUpdated: Date.now()
+      });
+    } catch (error) {
+      console.error('Error resetting donation data:', error);
     }
-  }, []);
-
-  // Refresh pending donations periodically
-  useEffect(() => {
-    const refreshInterval = setInterval(() => {
-      const freshPendingDonations = getPendingDonations();
-      setPendingDonations(freshPendingDonations);
-    }, 10000); // Refresh every 10 seconds
-    
-    return () => clearInterval(refreshInterval);
-  }, []);
+  };
 
   // Context value
   const value = {
@@ -258,8 +276,10 @@ export const DonationProvider = ({ children }) => {
     donationHistory,
     nightlyDonations,
     pendingDonations,
+    lastUpdated,
     addDonation,
-    trackExternalDonation: trackExternalDonationClick
+    trackExternalDonation: trackExternalDonationClick,
+    resetDonations
   };
 
   return (

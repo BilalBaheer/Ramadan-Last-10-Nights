@@ -3,7 +3,7 @@ import { Container, Card, Row, Col, ProgressBar, Button } from 'react-bootstrap'
 import { useDonations } from '../context/DonationContext';
 
 const DonationTracker = () => {
-  const { totalDonations, nightlyDonations, resetDonations } = useDonations();
+  const { totalDonations, nightlyDonations, resetDonations, lastUpdated } = useDonations();
 
   const calculateProgress = (amount, target) => {
     return Math.min((amount / target) * 100, 100);
@@ -16,6 +16,13 @@ const DonationTracker = () => {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount || 0);
+  };
+
+  // Format the last updated time
+  const formatLastUpdated = (timestamp) => {
+    if (!timestamp) return 'Never updated';
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString();
   };
 
   // Convert the nightlyDonations object to an array for mapping
@@ -36,7 +43,7 @@ const DonationTracker = () => {
             <p className="text-muted mb-2">Total Donations Collected</p>
             <h1 className="donation-counter">{formatCurrency(totalDonations)}</h1>
             <p className="text-muted">
-              <small>Last updated: {new Date().toLocaleTimeString()}</small>
+              <small>Last updated: {formatLastUpdated(lastUpdated)}</small>
             </p>
           </div>
 

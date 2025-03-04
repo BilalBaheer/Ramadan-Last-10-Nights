@@ -15,6 +15,7 @@ A comprehensive donation management platform designed for Ramadan's last 10 nigh
 - [Email Notification System](#email-notification-system)
 - [External Donation Tracking](#external-donation-tracking)
 - [Donation Scheduling](#donation-scheduling)
+- [Persistent Data Storage](#persistent-data-storage)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -66,7 +67,8 @@ The platform allows users to:
 - **Vite**: Build tool and development server
 - **React Bootstrap**: UI component library
 - **Context API**: State management
-- **localStorage**: Client-side data persistence
+- **IndexedDB**: Persistent client-side database
+- **localStorage**: Fallback client-side data persistence
 - **EmailJS**: Email notification service
 
 ### Key Dependencies
@@ -94,7 +96,32 @@ The platform allows users to:
 2. Actions are processed through the donation service
 3. DonationContext updates global state
 4. Components re-render with updated information
-5. Data is persisted to localStorage
+5. Data is persisted to IndexedDB and localStorage for redundancy
+
+## 💾 Persistent Data Storage
+
+The platform uses a robust client-side data persistence system to ensure donation data is never lost:
+
+### Features
+- **IndexedDB Storage**: Primary storage mechanism for all donation data
+- **localStorage Backup**: Secondary storage as a fallback mechanism
+- **Automatic Synchronization**: Data is automatically saved when changes occur
+- **Timestamp Tracking**: Each data update is timestamped for accurate "last updated" information
+- **Error Recovery**: Graceful fallback to localStorage if IndexedDB is unavailable
+
+### Implementation Details
+- **dataStorage.js**: Core service that manages all data persistence operations
+- **Browser-Native Solution**: Uses built-in browser storage APIs for maximum compatibility
+- **Redundant Storage**: Data is saved in both IndexedDB and localStorage for reliability
+- **Initialization Process**: Automatically creates database and object stores on first run
+- **Default Data Structure**: Provides consistent data structure for new installations
+
+### Data Persistence Benefits
+- Donation data persists between browser sessions and page refreshes
+- Donation history is preserved even if the browser is closed
+- Nightly donation totals remain accurate over time
+- Last updated timestamps show when data was last modified
+- Admin reset functionality clears all storage when needed
 
 ## 📥 Installation
 
@@ -196,7 +223,3 @@ The platform includes a comprehensive email notification system to keep users in
 3. The reminder service schedules emails for each of the last 10 nights (March 22-31, 2025)
 4. At the specified time on each night, users receive a reminder email with that night's donation details
 5. Administrators can test both email types through the DonationEmailViewer component
-
-
-
-Built with ❤️ to facilitate charitable giving during Ramadan's blessed nights.
