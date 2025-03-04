@@ -10,6 +10,7 @@ import DonationHistory from './components/DonationHistory';
 import CharitiesTab from './components/CharitiesTab';
 import ResourcesTab from './components/ResourcesTab';
 import DonationEmailViewer from './components/DonationEmailViewer';
+import HomePage from './components/HomePage';
 import { DonationProvider } from './context/DonationContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -48,7 +49,7 @@ function App() {
             
             <Tab.Content>
               <Tab.Pane eventKey="home">
-                <CharityList />
+                <HomePage onTabSelect={setActiveTab} />
               </Tab.Pane>
               <Tab.Pane eventKey="schedule">
                 <DonationScheduler />

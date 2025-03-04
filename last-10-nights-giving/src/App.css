@@ -367,6 +367,67 @@ body {
   background-color: #4CAF50;
 }
 
+/* Home Page Styles */
+.home-page section {
+  padding: 3rem 0;
+}
+
+.home-page .welcome-section {
+  padding-top: 1rem;
+}
+
+.home-page .stats-card {
+  border-radius: var(--border-radius);
+  background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+}
+
+.home-page .stats-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+}
+
+.home-page .icon-wrapper {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(76, 175, 80, 0.1);
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+.home-page .charity-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.home-page .charity-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.home-page .charity-card .card-img-top {
+  height: 180px;
+  object-fit: cover;
+}
+
+.home-page .rating-badge {
+  display: flex;
+  align-items: center;
+  padding: 0.4rem 0.6rem;
+}
+
+.home-page .cta-section {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
 /* Footer Section */
 .footer-section {
   background-color: #1a1a1a;
