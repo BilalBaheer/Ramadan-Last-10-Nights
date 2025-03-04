@@ -197,15 +197,6 @@ The platform includes a comprehensive email notification system to keep users in
 4. At the specified time on each night, users receive a reminder email with that night's donation details
 5. Administrators can test both email types through the DonationEmailViewer component
 
-## 🤝 Contributing
-
-We welcome contributions to improve the Last 10 Nights Giving Platform!
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 
 Built with ❤️ to facilitate charitable giving during Ramadan's blessed nights.
