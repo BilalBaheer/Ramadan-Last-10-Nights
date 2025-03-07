@@ -201,7 +201,7 @@ The scheduling system allows users to plan their donations for specific nights:
 
 ## 📧 Email Notification System
 
-The platform includes a comprehensive email notification system to keep users informed about their donations:
+The platform includes a comprehensive email notification system to keep users informed about their donations such as:
 
 ### Features
 - **Confirmation Emails**: Sent immediately when a donation is scheduled
@@ -223,3 +223,5 @@ The platform includes a comprehensive email notification system to keep users in
 3. The reminder service schedules emails for each of the last 10 nights (March 22-31, 2025)
 4. At the specified time on each night, users receive a reminder email with that night's donation details
 5. Administrators can test both email types through the DonationEmailViewer component
+
+March 2025
