@@ -224,4 +224,4 @@ The platform includes a comprehensive email notification system to keep users in
 4. At the specified time on each night, users receive a reminder email with that night's donation details
 5. Administrators can test both email types through the DonationEmailViewer component
 
-March 2025
+ 2025
