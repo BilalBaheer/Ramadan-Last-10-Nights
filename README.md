@@ -1,6 +1,5 @@
 # Last 10 Nights Giving Platform
 
-![Last 10 Nights Giving Platform](https://via.placeholder.com/800x400?text=Last+10+Nights+Giving+Platform)  "Adjust soon"
 
 A comprehensive donation management platform designed for Ramadan's last 10 nights, enabling Muslims to maximize their charitable giving during this spiritually significant period.
 
